@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+	<display-name>SIGN IN FIRST</display-name>
+	<servlet>
+		<servlet-name>Login</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Login</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>Logout</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.LogoutServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Logout</servlet-name>
+		<url-pattern>/logout</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>GetCustomers</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.GetCustomersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetCustomers</servlet-name>
+		<url-pattern>/getCustomers/</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GetCustomer</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.GetCustomerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GetCustomer</servlet-name>
+		<url-pattern>/get-customer</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AddCustomer</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.AddCustomerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddCustomer</servlet-name>
+		<url-pattern>/add-customer</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>UpdateCustomer</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.UpdateCustomerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateCustomer</servlet-name>
+		<url-pattern>/update-customer</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DeleteCustomer</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.DeleteCustomerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteCustomer</servlet-name>
+		<url-pattern>/delete-customer</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>CustomerForm</servlet-name>
+		<servlet-class>edu.rupp.group3.customer.CustomerFormServlet</servlet-class>
+	</servlet>
+	
+	
+	<servlet-mapping>
+		<servlet-name>CustomerForm</servlet-name>
+		<url-pattern>/customer-form</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	<servlet> <!-- servlet definition -->
+        <servlet-name>ErrorHandler</servlet-name>
+        <servlet-class>edu.rupp.group3.customer.ErrorHandler</servlet-class>
+	</servlet>
+	<servlet-mapping><!-- servlet mappings -->
+	        <servlet-name>ErrorHandler</servlet-name>
+	        <url-pattern>/errorHandler</url-pattern>
+	</servlet-mapping>
+	<error-page>
+        <error-code>404</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+    
+
+	<error-page>
+   <!-- exception-type generic error -->
+    <exception-type>java.lang.Throwable</exception-type >
+    <location>/ErrorHandler</location>
+</error-page>
+
+	
+	<session-config>
+		<!-- 15 minute default value is 30min -->
+		<session-timeout>15</session-timeout>
+	</session-config>
+	<filter>
+		<filter-name>MyFilter</filter-name>
+		<filter-class>edu.rupp.group3.customer.MyFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>MyFilter</filter-name>
+		<url-pattern>/app/*</url-pattern>
+	</filter-mapping>
+	<welcome-file-list>  
+	   <welcome-file>login.html</welcome-file>  
+	</welcome-file-list> 
+</web-app>
+

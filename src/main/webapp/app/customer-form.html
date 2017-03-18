@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Customer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="../assets/plugins/bootstrap/bootstrap.min.css" rel="stylesheet">
+<link href="../assets/plugins/datepicker/datepicker3.css" rel="stylesheet">
+<link href="../assets/plugins/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+<link href="../assets/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<!--<h3>Log In Security &nbsp;|&nbsp;<a href="/logout">Logout</a></h3>-->
+		<h2 style="text-align: center;">Customer Management</h2>
+		<hr>
+	    <div class="row">
+	    	<button class="btn btn-primary" id="btn-new" style="margin-bottom:-70px;">Add New</button>
+	        <table class="table" id="tbl-customer-list"
+                       data-toggle="table"
+                       data-toolbar="#get"
+                       data-url="/getCustomers/"
+                       data-search="true"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-page-list="[10,20]"
+                       data-pagination="true"
+                       data-height="500"
+                    >
+                    <thead>
+	                    <tr>
+	                        <th data-field="id">Cus_ID</th>
+	                        <th data-field="firstname" data-visible="true">First Name</th>
+	                        <th data-field="lastname" data-visible="true">Last Name</th>
+	                        <th data-field="gender" data-visible="true">Gender</th>
+	                        <th data-field="companey" data-visible="true">Companey</th>
+	                        <th data-field="email" >Email Address</th>
+	                        <th data-field="dobToString" >DOB</th>
+	                        <th data-field="address" >Address</th>
+	                        <th data-field="phone">Phone Number</th>
+	                        <th data-field="createdDateToString" >Created Date</th>
+	                        <th data-field="updatedDateToString">Updated Date</th>
+	                        <th data-field="actionButtons">Action</th>
+	                       	                       
+	                    </tr>
+                    </thead>
+                </table>
+	    </div>
+	</div>
+	
+<!-- Modal -->
+<div id="customer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add New Customer</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <form id="customer-form">        
+	                    <div class="col-lg-12">
+	                        <label>First Name *:</label>
+	                        <input type="text" class="form-control" id="firstname" name="firstname" value=""/>
+	                    </div>
+	                    <div class="col-lg-12">
+	                        <label>Last Name *:</label>
+	                        <input type="text" class="form-control" id="lastname" name="lastname" value=""/>
+	                    </div>
+	                    <div class="col-lg-12">
+	                        <label>Gender:</label>
+	                        <select class="form-control gender" id="gender" name="gender">
+	                            <option value="M">Male</option>
+	                            <option value="F">Female</option>
+	                        </select>
+	                    </div>
+	                    <!--add new-->
+	                    <div class="col-lg-12">
+	                        <label>Companey</label>
+	                        <input type="text" class="form-control" id="companey" name="companey" value=""/>
+	                    </div>
+	                      <div class="col-lg-12">
+	                        <label>Email:</label>
+	                        <input type="text" class="form-control" id="email" name="email" value=""/>
+	                    </div>
+	                      <div class="col-lg-12">
+	                        <label>DOB *:</label>
+	                        <input type="text" class="form-control date" id="dob" name="dob" value=""/>
+	                    </div>
+	                    <div class="col-lg-12">
+	                        <label>Phone Number *:</label>
+	                        <input type="text" class="form-control" id="phone-number" name="phone_number" value=""/>
+	                    </div>
+	                      <div class="col-lg-12">
+	                        <label>Address:</label>
+	                        <textarea class="form-control" id="address" name="address" /></textarea>
+	                    </div>    
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-add" >Add</button>
+                <button type="button" class="btn btn-default" id="btn-cancel" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+	
+<script src="../assets/js/jquery-1.11.1.min.js"></script>
+<script src="../assets/plugins/bootstrap/bootstrap.min.js"></script>
+<script src="../assets/plugins/bootstrap-table/bootstrap-table.js"></script>
+<script src="../assets/plugins/datepicker/bootstrap-datepicker.js"></script>
+
+<script>
+var id = '';
+$(function(){
+	$('.date').datepicker({
+        format: 'yyyy-mm-dd'
+    });
+	
+    $('.date').datepicker().on('changeDate', function(){
+        $(this).datepicker('hide');
+    });
+	
+	$('#btn-new').on('click', function(){
+		clearForm();
+		id = '';
+		$('.modal-title').text('Add New Customer');
+		$('#btn-add').text('Add');
+        $('#customer-modal').modal();
+	});
+	
+	$('#btn-add').on('click', function(){
+		if(id == ''){
+			$.ajax({
+				url: '/add-customer',
+				data: $('#customer-form').serialize(),
+				dataType: 'JSON',
+				type: 'POST'
+			}).done(function(r){
+				if(parseInt(r.status) == 1){
+	                $('#tbl-customer-list').bootstrapTable('refresh');
+	                $('#btn-cancel').click();
+					alert(r.message);
+
+				}else{
+					alert(r.message);
+				}
+			});
+		}else{
+			var data = $('#customer-form').serialize();
+			data += '&id=' + id;
+			;
+			$.ajax({
+				url: '/update-customer',
+				data: data,
+				dataType: 'JSON',
+				type: 'POST'
+			}).done(function(r){
+				if(parseInt(r.status) == 1){
+	                $('#tbl-customer-list').bootstrapTable('refresh');
+	                $('#btn-cancel').click();
+					alert(r.message);
+
+				}else{
+					alert(r.message);
+				}
+			});
+		}		
+	});
+	
+	$('#tbl-customer-list').on('click', '.delete', function(){
+		if(confirm("Are you sure to delete?")){
+			var deleteId = $(this).attr('data-id');
+			$.ajax({
+				url: '/delete-customer',
+				data:{id:deleteId},
+				dataType: 'JSON',
+				type: 'POST'
+			}).done(function(r){
+				if(parseInt(r.status) == 1){
+					alert(r.message);
+	                $('#tbl-customer-list').bootstrapTable('refresh');
+				}else{
+					alert(r.message);
+				}
+			});
+		}
+	});
+	
+	$('#tbl-customer-list').on('click', '.edit', function(){
+			clearForm();
+			id = $(this).attr('data-id');
+			$('.modal-title').text('Edit Customer (ID='+id+')');
+			$.ajax({
+				url: '/get-customer' ,
+				data:{id:id},
+				dataType: 'JSON',
+				type: 'GET'
+			}).done(function(r){
+				$('#firstname').val(r.firstname);
+				$('#lastname').val(r.lastname);
+				$('#gender').val(r.gender);
+				$('#dob').val(r.dobToString);
+				$('#email').val(r.email);
+				$('#phone-number').val(r.phone);
+				$('#address').val(r.address);
+				
+				$('#btn-add').text('Update');
+		        $('#customer-modal').modal();
+
+			});
+	});
+});
+
+function clearForm(){
+	$('#firstname, #lastname, #email, #dob, #phone-number, #address').val('');
+	$('#gender').val('M');
+}
+</script>	
+</body>
+</html>
